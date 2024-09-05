@@ -1,0 +1,1 @@
+* independently if server requests authentication, authentication details -- are sent through -- request header
