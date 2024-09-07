@@ -5,10 +5,17 @@
 <!-- [![Javadoc](https://javadoc-badge.appspot.com/io.rest-assured/rest-assured.svg)](http://www.javadoc.io/doc/io.rest-assured/rest-assured) -->
 
 
-Testing and validation of REST services in Java is harder than in dynamic languages 
-such as Ruby and Groovy. REST Assured brings the simplicity of using these 
-languages into the Java domain.
-
+* Testing and validating REST services | Java -- is harder than -- | dynamic languages (_Example:_ Ruby and Groovy)
+* REST Assured
+  * allows
+    * bringing the simplicity of dynamic languages -- into the -- Java
+    * specifying and validating
+      * parameters
+      * headers
+      * cookies
+      * body
+  * supports ANY HTTP method /
+    * explicit support for *POST*, *GET*, *PUT*, *DELETE*, *OPTIONS*, *PATCH* and *HEAD*
 
 ## News
 * 2024-07-05: REST Assured 5.5.0 is released with several bug fixes and a new [Scala 3 Extension Module](https://github.com/rest-assured/rest-assured/wiki/Scala#scala-extension-module). See [change log](https://raw.githubusercontent.com/rest-assured/rest-assured/master/changelog.txt) for more details.
@@ -17,63 +24,54 @@ languages into the Java domain.
 
 [Older News](https://github.com/rest-assured/rest-assured/wiki/OldNews)
 
-
 ## Examples
-Here's an example of how to make a GET request and validate the JSON or XML response:
+* make a GET request & validate the JSON or XML response
 
-```java
-get("/lotto").then().assertThat().body("lotto.lottoId", equalTo(5));
-```
+    ```java
+    get("/lotto").then().assertThat().body("lotto.lottoId", equalTo(5));
+    get("/lotto").then().assertThat().body("lotto.winners.winnerId", hasItems(23, 54));
+    ```
 
-Get and verify all winner ids:
+* -- via -- parameters
 
-```java
-get("/lotto").then().assertThat().body("lotto.winners.winnerId", hasItems(23, 54));
-```
+    ```java
+    given().
+        param("key1", "value1").
+        param("key2", "value2").
+    when().
+        post("/somewhere").
+    then().
+        body(containsString("OK"));
+    ```
 
-Using parameters:
+* -- via -- X-Path (XML only)
 
-```java
-given().
-    param("key1", "value1").
-    param("key2", "value2").
-when().
-    post("/somewhere").
-then().
-    body(containsString("OK"));
-```
+    ```java
+    given().
+        params("firstName", "John", "lastName", "Doe").
+    when().
+        post("/greetMe").
+    then().
+        body(hasXPath("/greeting/firstName[text()='John']")).
+    ```
 
-Using X-Path (XML only):
+* authentication mechanisms provided
 
-```java
-given().
-    params("firstName", "John", "lastName", "Doe").
-when().
-    post("/greetMe").
-then().
-    body(hasXPath("/greeting/firstName[text()='John']")).
-```
+    ```java
+    given().auth().basic(username, password).when().get("/secured").then().statusCode(200);
+    ```
 
-Need authentication? REST Assured provides several authentication mechanisms:
+* Getting and parsing a response body
 
-```java
-given().auth().basic(username, password).when().get("/secured").then().statusCode(200);
-```
-
-Getting and parsing a response body:
-
-```java
-// Example with JsonPath
-String json = get("/lotto").asString();
-List<String> winnerIds = from(json).get("lotto.winners.winnerId");
-    
-// Example with XmlPath
-String xml = post("/shopping").andReturn().body().asString();
-Node category = from(xml).get("shopping.category[0]");
-```
-
-REST Assured supports any HTTP method but has explicit support for *POST*, *GET*, *PUT*, *DELETE*, *OPTIONS*, *PATCH* and *HEAD* and includes specifying and validating e.g. parameters, headers, cookies and body easily.
-
+    ```java
+    // Example with JsonPath
+    String json = get("/lotto").asString();
+    List<String> winnerIds = from(json).get("lotto.winners.winnerId");
+        
+    // Example with XmlPath
+    String xml = post("/shopping").andReturn().body().asString();
+    Node category = from(xml).get("shopping.category[0]");
+    ```
 
 ## Documentation
 
