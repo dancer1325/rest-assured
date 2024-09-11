@@ -72,6 +72,7 @@ public class AutoSpringSecurityConfigurerITest {
     spring_security_configurer_is_automatically_applied_when_spring_security_test_is_in_classpath_when_using_the_dsl_and_post_processor_is_applied_before_web_app_context_setup() {
         // initialize RestAssuredMockMvc / 1! request
         RestAssuredMockMvc.given().
+                // change the order of fulfilling `MockMvcRequestSpecification` do NOT care webAppContextSetup().postProcessors() == postProcessors().webAppContextSetup()
                 postProcessors(httpBasic("username", "password")).
                 webAppContextSetup(context).
                 param("name", "Johan").
@@ -85,6 +86,7 @@ public class AutoSpringSecurityConfigurerITest {
 
     @Test public void
     spring_security_configurer_is_automatically_applied_when_spring_security_test_is_in_classpath_when_using_a_specifications_applied_before_web_app_context_setup() {
+        // extracting specification / can be reused
         MockMvcRequestSpecification specification = new MockMvcRequestSpecBuilder().setPostProcessors(httpBasic("username", "password")).build();
 
         RestAssuredMockMvc.given().
@@ -104,6 +106,7 @@ public class AutoSpringSecurityConfigurerITest {
         MockMvcRequestSpecification specification = new MockMvcRequestSpecBuilder().setPostProcessors(httpBasic("username", "password")).build();
 
         RestAssuredMockMvc.given().
+                // == previously, but changing the order of `webAppContextSetup()` & `spec()`
                 webAppContextSetup(context).
                 spec(specification).
                 param("name", "Johan").
@@ -134,6 +137,7 @@ public class AutoSpringSecurityConfigurerITest {
         }
     }
 
+    // @Test(expected...)   ONLY valid | JUnit4, use `Assertions.assertThrows(...)` | JUnit5
     @Test(expected = NestedServletException.class) public void
     doesnt_add_spring_security_configurer_automatically_when_mock_mvc_config_is_configured_not_to() {
         // initialize RestAssuredMockMvc / 1! request
@@ -151,6 +155,7 @@ public class AutoSpringSecurityConfigurerITest {
         final AtomicBoolean filterUsed = new AtomicBoolean(false);
 
         RestAssuredMockMvc.given().
+                // add 2 MockMvcConfigurer / last one is passed a `Filter`
                 webAppContextSetup(context, springSecurity(), springSecurity(new Filter() {
                     public void init(FilterConfig filterConfig) {
                     }
