@@ -17,6 +17,7 @@
 package io.restassured.examples.springmvc.controller;
 
 import io.restassured.examples.springmvc.config.MainConfiguration;
+// import module-specific methods   "io.restassured.module.mockmvc"
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import io.restassured.module.mockmvc.config.MockMvcConfig;
 import io.restassured.module.mockmvc.specification.MockMvcRequestSpecBuilder;
@@ -54,8 +55,9 @@ public class AutoSpringSecurityConfigurerITest {
 
     @Test public void
     spring_security_configurer_is_automatically_applied_when_spring_security_test_is_in_classpath_when_using_the_dsl() {
+        // initialize RestAssuredMockMvc / 1! request
         RestAssuredMockMvc.given().
-                webAppContextSetup(context).
+                webAppContextSetup(context).    // required to discover the application controllers
                 postProcessors(httpBasic("username", "password")).
                 param("name", "Johan").
         when().
@@ -68,6 +70,7 @@ public class AutoSpringSecurityConfigurerITest {
 
     @Test public void
     spring_security_configurer_is_automatically_applied_when_spring_security_test_is_in_classpath_when_using_the_dsl_and_post_processor_is_applied_before_web_app_context_setup() {
+        // initialize RestAssuredMockMvc / 1! request
         RestAssuredMockMvc.given().
                 postProcessors(httpBasic("username", "password")).
                 webAppContextSetup(context).
@@ -133,6 +136,7 @@ public class AutoSpringSecurityConfigurerITest {
 
     @Test(expected = NestedServletException.class) public void
     doesnt_add_spring_security_configurer_automatically_when_mock_mvc_config_is_configured_not_to() {
+        // initialize RestAssuredMockMvc / 1! request
         RestAssuredMockMvc.given().
                 webAppContextSetup(context).
                 config(RestAssuredMockMvc.config().mockMvcConfig(MockMvcConfig.mockMvcConfig().dontAutomaticallyApplySpringSecurityMockMvcConfigurer())).
