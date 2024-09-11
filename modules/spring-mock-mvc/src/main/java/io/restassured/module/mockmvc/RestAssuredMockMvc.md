@@ -9,4 +9,6 @@
 * `MockMvcRequestSpecification given(){}`
   * 👁️if you need to specify request's parameters or body -> main entry-point of the API 👁️
   * 👁️ == `MockMvcRequestSpecification with(){}` / another syntax 👁️
+* `void reset() {}`
+  * reset ALL static configurations
 * TODO:

@@ -18,4 +18,11 @@
 * `MockMvcRequestAsyncSender when()`
   * uses
     * once you have set up the request specification -> invoke it
+* `MockMvcRequestSpecification spec();`
+  * allows
+    * adding request data -- from a -- predefined specification
+      * settings / are overwritten -- check -- 
+      * settings / are merged -- check --
+  * uses
+    * reuse a specification -- cross -- multiple requests
 * TODO:
