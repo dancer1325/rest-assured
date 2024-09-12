@@ -76,8 +76,10 @@ public class MockMvcSecurityITest {
                 expect(authenticated().withUsername("username"));
    }
 
+   // == previous one, BUT specifying statically the authentication
     @Test public void
     can_specify_request_post_processor_statically_for_authentication() throws Exception {
+         // static specification
         RestAssuredMockMvc.authentication = RestAssuredMockMvc.with(httpBasic("username", "password"));
 
         try {
@@ -95,6 +97,7 @@ public class MockMvcSecurityITest {
         }
     }
 
+    // specifying authentication apart via `MockMvcRequestSpecification`
     @Test public void
     can_specify_authentication_request_post_processor_using_spec_builder() throws Exception {
         MockMvcRequestSpecification specification = new MockMvcRequestSpecBuilder().setAuth(RestAssuredMockMvc.with(httpBasic("username", "password"))).build();
@@ -115,7 +118,8 @@ public class MockMvcSecurityITest {
     basic_auth_request_post_processor_works_with_explicit_user() throws Exception {
         RestAssuredMockMvc.given().
                 mockMvc(mvc).
-                auth().with(httpBasic("username", "password"), user("username").password("password")).
+                // httpBasic(userName, password)    !=   user(userName) & password(password)            -- check how test passes, being different values
+                auth().with(httpBasic("username", "password"), user("usernametwo").password("passwordtwo")).
                 param("name", "Johan").
          when().
                 get("/secured/greeting").
@@ -129,6 +133,7 @@ public class MockMvcSecurityITest {
     can_specify_user_for_controllers_not_protected_by_basic_auth() throws Exception {
         RestAssuredMockMvc.given().
                 mockMvc(mvc).
+                // here NOT httpBasic()
                 auth().with(user("authorized_user").password("password")).
                 param("name", "Johan").
          when().
@@ -153,6 +158,7 @@ public class MockMvcSecurityITest {
                 expect(authenticated().withUsername("authorized_user"));
    }
 
+    // TODO: DSL post processors? Where?
     @Test public void
     can_authenticate_using_dsl_post_processors() throws Exception {
         RestAssuredMockMvc.given().
@@ -169,6 +175,7 @@ public class MockMvcSecurityITest {
 
     @Test public void
     can_authenticate_using_static_post_processors() throws Exception {
+         // statically adding post processors
         RestAssuredMockMvc.postProcessors(httpBasic("username", "password"));
 
         try {
@@ -190,6 +197,7 @@ public class MockMvcSecurityITest {
 
     @Test public void
     can_authenticate_using_post_processors_in_spec() throws Exception {
+         // common specifications
         MockMvcRequestSpecification specification = new MockMvcRequestSpecBuilder().setPostProcessors(httpBasic("username", "password")).build();
 
         RestAssuredMockMvc.given().
