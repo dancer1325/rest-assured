@@ -8,3 +8,8 @@
     * Problem1: "io.rest-assured.examples:scalatra-webapp:war:5.5.0" NOT found
       * Attempt1: `mvn clean package` rest of related maven projects
       * Solution: TODO:
+
+## Notes
+* "WithJetty"
+  * declare a Jetty server
+  * used | ALL tests
